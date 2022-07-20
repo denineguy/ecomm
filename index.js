@@ -1,16 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { is } = require('express/lib/request');
+const cookieSession = require('cookie-session');
 const usersRepo = require('./repositories/users');
+const { rmSync } = require('fs');
+
 
 //what kind of request it shoudl receive and what it shoud do
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieSession({
+    keys: ['lkasld235j']
+}));
 
-app.get('/', (req, res) => {
+app.get('/signup', (req, res) => {
     res.send(`
     <div>
+        Your id is: ${req.session.userId}
         <form method="POST">
             <input name="email" placeholder="email"/>
             <input name="password" placeholder="password"/>
@@ -23,7 +29,7 @@ app.get('/', (req, res) => {
 
 
 //Listen to post
-app.post('/', async (req, res) => {
+app.post('/signup', async (req, res) => {
     const {email, password, passwordConfirmation} = req.body
     //get access to email, password, and password confirmation
     const existingUser = await usersRepo.getOneBy({email})
@@ -34,9 +40,40 @@ app.post('/', async (req, res) => {
     if (password !== passwordConfirmation) {
         return res.send('Passwords must match');
     }
+
+    //Create a user in our user repo to represent this person
+    const user = await usersRepo.create({email, password});
+
+    console.log(user.id);
+    // Store the id of that user in the users cookie
+    req.session.userId === user.id; //added by cookie-session
+    console.log(req.session.userId);
     
-    res.send('Account created!!!')
+    res.send('Account created!!!');
 });
+
+
+app.get('/signout', (req, res) => {
+    req.session = null;
+    res.send('You are logged out');
+})
+
+app.get('/signin', (req, res) => {
+    res.send(`
+    <div>
+        <form method="POST">
+            <input name="email" placeholder="email"/>
+            <input name="password" placeholder="password"/>
+            <button>Sign In</button>
+        </form>
+    </div>`
+    )
+})
+
+app.post('/signin', (req, res) => {
+
+});
+
 //start listening for requests
 app.listen(3000, () => {
     console.log('Listening')
