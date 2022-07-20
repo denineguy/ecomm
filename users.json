@@ -88,5 +88,20 @@
     "email": "love@love.com",
     "password": "him",
     "id": "72d4068f"
+  },
+  {
+    "email": "test3@test.com",
+    "password": "password",
+    "id": "fb3da74a"
+  },
+  {
+    "email": "test3@test.com",
+    "password": "password",
+    "id": "7ebe4099"
+  },
+  {
+    "email": "test4@test.com",
+    "password": "a38604d35fa4efb00991f5e3cd3f28dceb8b2f9cbd84bac8ceb2ae195cbbd5d7733a04e5b447b5044d396edd7cfb1af67e792df93c103a3f437c39a152fa3cda.8d5ebbe1e2ee4bf3",
+    "id": "e8a1f6ad"
   }
 ]
