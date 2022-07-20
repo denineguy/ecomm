@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const usersRepo = require('./repositories/users');
 const { rmSync } = require('fs');
+const users = require('./repositories/users');
 
 
 //what kind of request it shoudl receive and what it shoud do
@@ -79,7 +80,11 @@ app.post('/signin', async(req, res) => {
        return res.send('Email not found');
     }
 
-    if(user.password !== password) {
+    const validPassword = await usersRepo.comparePasswords(
+        user.password,
+        password
+    );
+    if(!validPassword) {
         return res.send('Invalid password');
     }
 
